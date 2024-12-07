@@ -155,6 +155,9 @@ export interface IGetItemsListParams {
 export interface IGetItemMetadataParams extends IGetItemsListParams {
   path: string;
 }
+export interface IGetPublicItemMetadataParams extends IGetItemMetadataParams {
+  public_key: string;
+}
 export interface IGetLastUploadedItemsListParams
   extends Omit<IGetItemsListParams, 'sort' | 'offset'> {}
 export interface IGetPublicItemsListParams

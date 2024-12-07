@@ -2,6 +2,7 @@ import { createReadStream } from 'fs';
 import {
   YA_DISK_BASE_URL,
   YA_DISK_RESOURCES_URL,
+  YA_DISK_PUBLIC_RESOURCES_URL,
   YA_DISK_TRASH_URL,
 } from './config';
 import { HttpClient } from './http-client';
@@ -17,6 +18,7 @@ import type {
   IGetItemsListParams,
   IGetPublicItemsListRes,
   IGetPublicItemsListParams,
+  IGetPublicItemMetadataParams,
   IGetLastUploadedItemsListParams,
   IGetLastUploadedItemsListRes,
   IMoveParams,
@@ -149,6 +151,35 @@ export class YaDisk {
     });
     return res.data;
   }
+  /**
+   * Получить метаинформацию об опубликованном ресурсе
+   * Если автор установил запрет на скачивание вернет ошибку!
+   * {@link https://yandex.ru/dev/disk-api/doc/ru/reference/public.html}
+   */
+    public async getPublicItemMetadata(
+      params: IGetPublicItemMetadataParams
+    ): Promise<Maybe<IResource>> {
+      try {
+        const res = await this._http.request<IResource>({
+          method: 'GET',
+          url: YA_DISK_PUBLIC_RESOURCES_URL,
+          params: {
+            public_key: params.public_key,
+            limit: params.limit,
+            media_type: params.mediaType,
+            offset: params.offset,
+            preview_crop: params.previewCrop,
+            preview_size: params.previewSize,
+            fields: params.fields,
+          },
+        });
+        return res.data;
+      } catch (e) {
+        if (this._http.isHttpError(e) && (e.code === 404 || e.code === 403)) {
+          return null;
+        } else throw e;
+      }
+    }
   /**
    * Получить список файлов упорядоченный по дате загрузки
    * {@link https://yandex.ru/dev/disk/api/reference/recent-upload.html}
