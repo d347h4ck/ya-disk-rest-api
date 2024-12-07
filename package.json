@@ -1,6 +1,6 @@
 {
   "name": "ya-disk-rest-api",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "author": "Ilya Strus <strax1990@gmail.com>",
   "description": "Тщательно типизированная и задокументированная обертка над Yandex Disk REST API",
   "scripts": {
@@ -17,6 +17,7 @@
     "docs.watch": "typedoc --watch",
     "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' TS_NODE_TRANSPILE_ONLY=true mocha --timeout 60000 -r ts-node/register -r tests/mocha-hooks.ts \"tests/*.spec.ts\"",
     "prepublishOnly": "npm run build",
+    "prepare": "npm run build",
     "semantic-release": "semantic-release"
   },
   "files": [
