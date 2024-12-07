@@ -165,6 +165,7 @@ export class YaDisk {
           url: YA_DISK_PUBLIC_RESOURCES_URL,
           params: {
             public_key: params.public_key,
+            path: params.path,
             limit: params.limit,
             media_type: params.mediaType,
             offset: params.offset,
