@@ -1,4 +1,3 @@
-import { createReadStream } from 'fs';
 import {
   YA_DISK_BASE_URL,
   YA_DISK_RESOURCES_URL,
@@ -391,86 +390,6 @@ export class YaDisk {
       params: { path: params.path, overwrite: params.overwrite },
     });
     return res.data;
-  }
-  /**
-   * загрузить файл по полученной из getUploadUrl ссылке
-   * {@link https://yandex.ru/dev/disk/api/reference/upload.html#response-upload}
-   * @example
-   * ```ts
-   * await disk.uploadByUploadUrl({
-   *  file: "./file.txt",
-   *  url: "url-from-get-upload-url-method"
-   * })
-   * ```
-   * @example
-   * ```ts
-   * await disk.uploadByUploadUrl({
-   *  file: fs.createReadStream("./file.txt"),
-   *  url: "url-from-get-upload-url-method"
-   * })
-   * ```
-   * @example
-   * ```ts
-   * await disk.uploadByUploadUrl({
-   *  file: Buffer.from('hello world', 'utf-8'),
-   *  url: "url-from-get-upload-url-method"
-   * })
-   * ```
-   */
-  public async uploadByUploadUrl(
-    params: IUploadByUploadUrlParams
-  ): Promise<void> {
-    let body: TUploadFile;
-    if (typeof params.file === 'string') {
-      body = createReadStream(params.file, 'binary');
-    } else {
-      body = params.file;
-    }
-    const res = await this._http.request<void>({
-      url: params.url,
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'text/plain',
-      },
-      body,
-    });
-    return res.data;
-  }
-  /**
-   * хелпер комбинирующий {@link YaDisk.getUploadUrl} и {@link YaDisk.uploadByUploadUrl}.
-   * Получает ссылку на загрузку и загружает по ней файл
-   * @example
-   * ```ts
-   * await disk.upload({
-   *  path: "ya-disk-file.txt",
-   *  file: "./file.txt",
-   *  overwrite: true,
-   * })
-   * ```
-   * @example
-   * ```ts
-   * await disk.upload({
-   *  path: "ya-disk-file.txt",
-   *  file: fs.createReadStream("./file.txt"),
-   * })
-   * ```
-   * @example
-   * ```ts
-   * await disk.upload({
-   *  path: "ya-disk-file.txt",
-   *  file: Buffer.from('hello world', 'utf-8'),
-   * })
-   * ```
-   */
-  public async upload(params: IUploadParams): Promise<void> {
-    const { href: url } = await this.getUploadUrl({
-      path: params.path,
-      overwrite: params.overwrite,
-    });
-    return await this.uploadByUploadUrl({
-      url,
-      file: params.file,
-    });
   }
   /**
    * Загрузить файл в Диск по внешнему URL
